@@ -1,0 +1,33 @@
+{
+  "name": "@tigersway/d1-backup",
+  "description": "Cloudflare D1 SQL backup downloader.",
+  "keywords": [
+    "cloudflare",
+    "cli",
+    "d1",
+    "backup"
+  ],
+  "version": "1.0.0-alpha.0",
+  "license": "MIT",
+  "author": "Ben Michaud <ben@tigersway.net>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TigersWay/d1-backup.git"
+  },
+  "homepage": "https://github.com/TigersWay/d1-backup/#readme",
+  "scripts": {
+    "backup": "./bin/d1-backup backup-100.sql -l 100"
+  },
+  "files": [
+    "bin/d1-backup",
+    "src/*.js"
+  ],
+  "bin": {
+    "d1-backup": "./bin/d1-backup"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "dotenv": "^16.4.5",
+    "picocolors": "^1.0.0"
+  }
+}

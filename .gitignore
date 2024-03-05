@@ -1,0 +1,17 @@
+# Windows & helpers, IDE & Personal preferences
+desktop.ini
+folder.ico
+.keep/
+
+# Dependency files & directories (p/npm)
+node_modules/
+
+# Current project's specific files & directories
+wrangler.toml
+.env*
+!.env.sample
+.wrangler/
+backup*.sql
+*.sh
+
+!gitkeep
