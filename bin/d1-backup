@@ -8,31 +8,33 @@ const pk = require('../package.json');
 program
   .name(pk.name)
   .description(pk.description)
-  .option('--token <token>', 'Cloudflare API Token', process.env.CLOUDFLARE_API_TOKEN)
-  .option('--account <account>', 'Cloudflare account ID', process.env.CLOUDFLARE_ACCOUNT_ID)
-  .option('--d1 <database>', 'Cloudflare D1 uuid', process.env.CLOUDFLARE_DB_ID)
+  .requiredOption('--token <token>', 'Cloudflare API Token', process.env.CLOUDFLARE_API_TOKEN)
+  .requiredOption('--account <account>', 'Cloudflare account ID', process.env.CLOUDFLARE_ACCOUNT_ID)
+  .requiredOption('--d1 <database>', 'Cloudflare D1 uuid', process.env.CLOUDFLARE_DB_ID)
   .option('-l,--limit <limit>', 'number of values in each insert', (value, previous) => parseInt(value, 10), 100)
   .argument('[file]', 'file', './backup.sql')
   .version(pk.version, '-v,--version')
   .parse();
 
 const options = program.opts();
-if (!options.token) {
-  console.error(`Missing ${program.options[0].description}`);
-  process.exit(1);
-}
-if (!options.account) {
-  console.error(`Missing ${program.options[1].description}`);
-  process.exit(1);
-}
-if (!options.d1) {
-  console.error(`Missing ${program.options[2].description}`);
-  process.exit(1);
-}
+// if (!options.token) {
+//   console.error(`Missing ${program.options[0].description}`);
+//   process.exit(1);
+// }
+// if (!options.account) {
+//   console.error(`Missing ${program.options[1].description}`);
+//   process.exit(1);
+// }
+// if (!options.d1) {
+//   console.error(`Missing ${program.options[2].description}`);
+//   process.exit(1);
+// }
 if (isNaN(options.limit) || options.limit > 1000) {
-  console.error(`Missing proper limit`);
+  console.error("error: option '--limit <limit>' is not an integer");
   process.exit(1);
 }
+
+// console.log(options);
 
 require('../src/backup')({
   token: options.token,

@@ -29,13 +29,16 @@ module.exports = async (options) => {
       .map((v) => (typeof v === 'string' ? `'${v.replaceAll(`'`, `''`)}'` : v == null ? 'null' : v))
       .join(',');
 
+  // Analytic  / Which database are we working on?
   const infos = await callAPI();
   console.log(
     `D1: name: ${yellow(infos.name)} | region: ${yellow(infos.running_in_region)} | size: ${yellow(
       (infos.file_size / 1000000).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     )} MB`
   );
+  append(`-- ${infos.name} Backup: ${new Date().toISOString()} --\n`, 'w');
 
+  // Get all the tables
   const tables = (
     await callAPI(
       'query',
@@ -47,12 +50,11 @@ module.exports = async (options) => {
     )
   ).shift().results;
 
-  append(`-- ${infos.name} Backup: ${new Date().toISOString()} --\n`, 'w');
-
+  // ForEach user table
   for (const table of tables) {
     if (table.name.startsWith('_cf_') || table.name.startsWith('sqlite_'));
     else {
-      process.stdout.write(table.name + ' ');
+      process.stdout.write(`${table.name} `);
 
       append(`DROP TABLE IF EXISTS "${table.name}";`);
       append(`${table.sql};`);
@@ -69,6 +71,7 @@ module.exports = async (options) => {
       )
         .shift()
         .results.map((e) => e.name);
+
       const values = (
         await callAPI(
           'query',
@@ -80,11 +83,14 @@ module.exports = async (options) => {
         )
       ).shift().results;
 
+      let loop = 0;
       while (values.length) {
         const tmpValues = values.splice(0, options.limit);
         append(`INSERT INTO "${table.name}" ("${columns.join('","')}") VALUES`);
         tmpValues.forEach((value, index, array) => append(`\t(${quoted(value)})${index < array.length - 1 ? ',' : ';'}`));
-        process.stdout.write('.');
+
+        process.stdout.write(`\r${table.name} : ${loop * options.limit + tmpValues.length} `);
+        loop++;
       }
 
       append('\n');

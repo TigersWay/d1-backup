@@ -4,7 +4,7 @@ This script helps you to create a SQL backup file of a Cloudflare D1 SQLite data
 
 This script exists because of troubles with SQLite "generated columns".
 
-## Usage [![npm](https://img.shields.io/npm/dm/d1-backup?label=npmjs&logo=npm&style=flat-square) ![npm](https://img.shields.io/npm/dt/d1-backup?label=npmjs&logo=npm&style=flat-square)](https://www.npmjs.com/package/@tigersway/d1-backup)
+## Usage [![npm](https://img.shields.io/npm/dm/@tigersway/d1-backup?label=npmjs&logo=npm&style=flat-square) ![npm](https://img.shields.io/npm/dt/@tigersway/d1-backup?label=npmjs&logo=npm&style=flat-square)](https://www.npmjs.com/package/@tigersway/d1-backup)
 
 To run the CLI, you need to prepare:
 
@@ -18,6 +18,12 @@ To run the CLI, you need to prepare:
 These keys can be set in a `.env` file or as command line parameters.
 
 ```shell
+CLOUDFLARE_API_TOKEN = "<token>"
+CLOUDFLARE_ACCOUNT_ID = "<account_id>"
+CLOUDFLARE_DB_ID = "<D1DB_id>"
+```
+
+```txt
 Usage: @tigersway/d1-backup [options] [file]
 
 Cloudflare D1 SQL backup downloader.
