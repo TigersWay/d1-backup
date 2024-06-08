@@ -7,7 +7,7 @@
     "d1",
     "backup"
   ],
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "license": "MIT",
   "author": "Ben Michaud <ben@tigersway.net>",
   "repository": {
@@ -16,7 +16,8 @@
   },
   "homepage": "https://github.com/TigersWay/d1-backup/#readme",
   "scripts": {
-    "backup": "./bin/d1-backup backup-100.sql -l 100"
+    "backup-test": "./bin/d1-backup backup-test.sql -l 10 -a 20",
+    "backup-full": "./bin/d1-backup"
   },
   "files": [
     "bin/d1-backup",
@@ -26,8 +27,8 @@
     "d1-backup": "./bin/d1-backup"
   },
   "dependencies": {
-    "commander": "^12.0.0",
+    "commander": "^12.1.0",
     "dotenv": "^16.4.5",
-    "picocolors": "^1.0.0"
+    "picocolors": "^1.0.1"
   }
 }

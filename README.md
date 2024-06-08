@@ -2,7 +2,7 @@
 
 This script helps you to create a SQL backup file of a Cloudflare D1 SQLite database. Based on the same idea as [Cretezy/cloudflare-d1-backup](https://github.com/Cretezy/cloudflare-d1-backup), it uses the [HTTP D1 API](https://developers.cloudflare.com/api/operations/cloudflare-d1-query-database) to query for table definitions and data, then outputs SQL commands to allow recreation of an equivalent/same database.
 
-This script exists because of troubles with SQLite "generated columns".
+This script first exists because of troubles with SQLite "generated columns". And now, it **doesn't use anymore "LIMIT" & "OFFSET"** to avoid generating a lot of reads!! But be careful, it needs "rowid"!
 
 ## Usage [![npm](https://img.shields.io/npm/dm/@tigersway/d1-backup?label=npmjs&logo=npm&style=flat-square) ![npm](https://img.shields.io/npm/dt/@tigersway/d1-backup?label=npmjs&logo=npm&style=flat-square)](https://www.npmjs.com/package/@tigersway/d1-backup)
 
@@ -32,12 +32,13 @@ Arguments:
   file                 file (default: "./backup.sql")
 
 Options:
-  --token <token>      Cloudflare API Token
-  --account <account>  Cloudflare account ID
-  --d1 <database>      Cloudflare D1 uuid
-  -l,--limit <limit>   number of values in each insert (default: 100)
-  -v,--version         output the version number
-  -h, --help           display help for command
+  --token <token>            Cloudflare API Token
+  --account <account>        Cloudflare account ID
+  --d1 <database>            Cloudflare D1 uuid
+  -l, --limit <limit>        number of values in each insert (default: 100)
+  -a, --apiLimit <apiLimit>  number of fetched rows per API call (default: 5000)
+  -v, --version              output the version number
+  -h, --help                 display help for command
 ```
 
 ## Restoring a backup
