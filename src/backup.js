@@ -7,18 +7,25 @@ module.exports = async (options) => {
 
   const callAPI = async (api = '', method = 'GET', body = null) => {
     try {
-      return await fetch(`${url}${api ? `/${api}` : ''}`, {
+      const response = await fetch(`${url}${api ? `/${api}` : ''}`, {
         headers: {
           'content-type': 'application/json',
           Authorization: `Bearer ${options.token}`
         },
         method,
         body
-      })
-        .then((response) => response.json())
-        .then((response) => response.result);
+      });
+      if (!response.ok) {
+        if (response.status >= 500) throw new Error(`${response.status}/${response.statusText}`);
+
+        const { errors } = await response.json();
+        throw new Error(`${errors[0].code}/${errors[0].message}`);
+      }
+
+      const json = await response.json();
+      return json.result;
     } catch (e) {
-      console.error(e.message);
+      console.error('API call error: ', e.message);
       process.exit(1);
     }
   };
@@ -50,10 +57,15 @@ module.exports = async (options) => {
 
   // Third or last: ForEach user table
   for (const table of tables) {
-    // System or Cloudflare tables will not be exported, but all the others
+    // System or Cloudflare tables will not be exported, but all the others with rowid
     if (table.name.startsWith('_cf_') || table.name.startsWith('sqlite_'));
     else {
       process.stdout.write(`${table.name} `);
+
+      if (table.sql.match(/without rowid/i)) {
+        process.stdout.write(' : No ROWID\n\n');
+        continue;
+      }
 
       append(`DROP TABLE IF EXISTS "${table.name}";`);
       append(`${table.sql.replace(/\s{2,}/g, ' ')};`);
@@ -104,5 +116,5 @@ module.exports = async (options) => {
       console.log();
     }
   }
-  append(`DELETE FROM sqlite_sequence;`); // Should always exist in any populated D1 database
+  // append(`DELETE FROM sqlite_sequence;`); // Should always exist in any populated D1 database
 };
